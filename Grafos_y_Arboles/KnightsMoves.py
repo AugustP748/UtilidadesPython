@@ -1,45 +1,33 @@
-import numpy as np
+from collections import deque
 
-def verifyValue(tablero,ejex,ejey) -> bool:
-    if ejex < 0 or ejey < 0 or ejex > len(tablero) or ejey > len(tablero):
-        return False
-    else:
-        return True
-
-def bfs():
-    ...
-
-def movimientos(tablero,ejex,ejey):
-    counter:int = 0
+def minKnightMoves(x, y, target_x, target_y):
+    # Movimientos posibles del caballo en el tablero de ajedrez
+    moves = [(-2, -1), (-2, 1), (-1, -2), (-1, 2), (1, -2), (1, 2), (2, -1), (2, 1)]
     
-
-
-
-if __name__ == '__main__':
-    tablero = np.zeros((8,8))
-    ejex:int = 4
-    ejey:int = 7
-    tablero[ejey,ejex] = 1 #posición del caballo
-    ObjetivoX = 0
-    ObjetivoY = 1
-    tablero[ObjetivoY,ObjetivoX] = 2 #objetivo
+    # Función para verificar si una posición está dentro del tablero
+    def is_inside_board(x, y):
+        return abs(x) <= 300 and abs(y) <= 300
     
-    movimientos(tablero,ejex-2,ejey-1)
-
-    #movimientos(tablero,ejex-2,ejey-1)
-    tablero[ejey-1][ejex-2] = 4
+    # Inicializar la cola para el BFS
+    queue = deque([(x, y, 0)])
+    visited = set([(x, y)])
     
-    tablero[ejey-1][ejex+2] = 4
-    tablero[ejey-2][ejex-1] = 4
-    tablero[ejey-2][ejex+1] = 4
-    
-    try:
-        tablero[ejey+1][ejex-2] = 4
-        tablero[ejey+1][ejex+2] = 4
-        tablero[ejey+2][ejex-1] = 4
-        tablero[ejey+2][ejex+1] = 4
+    while queue:
+        curr_x, curr_y, steps = queue.popleft()
+        if curr_x == target_x and curr_y == target_y:
+            return steps
         
-    except:
-        ...
+        for dx, dy in moves:
+            next_x, next_y = curr_x + dx, curr_y + dy
+            
+            # Verificar si la siguiente posición está dentro del tablero y no ha sido visitada
+            if (next_x, next_y) not in visited and is_inside_board(next_x, next_y):
+                visited.add((next_x, next_y))
+                queue.append((next_x, next_y, steps + 1))
     
-    print(tablero)
+    return -1  # Si no se puede alcanzar la posición objetivo, devuelve -1
+
+# Ejemplo de uso:
+initial_x, initial_y = 0, 0
+target_x, target_y = 5, 5
+print(minKnightMoves(initial_x, initial_y, target_x, target_y))  # Salida: 1
