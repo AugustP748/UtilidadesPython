@@ -1,6 +1,6 @@
 def dfs(grid, row, col):
     # Verificar los límites de la matriz y si la celda actual es una isla
-    if row < 0 or col < 0 or row >= len(grid) or col >= len(grid[0]) or grid[row][col] != '1':
+    if row < 0 or col < 0 or row >= len(grid) or col >= len(grid[0]) or grid[row][col] != 1:
         return
     
     # Marcar la celda actual como visitada
@@ -22,7 +22,7 @@ def numIslands(grid):
     
     for row in range(rows):
         for col in range(cols):
-            if grid[row][col] == '1':
+            if grid[row][col] == 1:
                 num_islands += 1
                 dfs(grid, row, col)
     
@@ -35,5 +35,11 @@ if __name__ == '__main__':
     ['0', '0', '1', '0', '0'],
     ['0', '0', '0', '1', '1']
     ]
-    
-    print(numIslands(grid))
+    mapa = [
+  [1,1,1,1,1],
+  [1,0,0,0,1],
+  [1,0,1,0,1],
+  [1,0,0,0,1],
+  [1,1,1,1,1],
+]
+    print(numIslands(mapa))
