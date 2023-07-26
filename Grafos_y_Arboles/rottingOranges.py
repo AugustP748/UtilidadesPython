@@ -45,5 +45,14 @@ def orangesRotting(cultivo):
 
 if __name__ == '__main__':
         # Ejemplo de matriz de cultivo de naranjas
-
+    cultivo = [
+        [2, 1, 1],
+        [1, 1, 0],
+        [0, 1, 1]
+    ]
+    days = orangesRotting(cultivo)
+    
+    print("day: ", days)
+    #for j in v:
+    #    print(j)
 
