@@ -1,61 +1,50 @@
 class Bridge:
-  def __init__(self):
-    self.ArrayLimits = []
-    self.distances = []
-    #self.distance:int = 0
-    
   def shortestBridge(self, A):
     # Tu código aquí 👇
-    self.searchLimit(A)
+    def dfs(A,i,j):
+        if i < 0 or j < 0 or i > len(A)-1 or j > len(A[0])-1:
+            return
+        if self.visited[i][j] or A[i][j] == 0: return
+        self.visited[i][j] = True
+        self.queue.append((i,j))
+        for k in range(4):
+            rr = i + self.rowVector[k]
+            cc = j + self.colVector[k]
+            dfs(A,rr,cc)
+    self.visited = [[False for i in range(len(A[0]))] for j in range(len(A))]
+    self.rowVector = [1,-1,0,0]
+    self.colVector = [0,0,1,-1]
+    self.queue = []
+    found = False
+    for i in range(len(A)):
+        if found:
+            break
+        for j in range(len(A[0])):
+            if A[i][j] == 1:
+                dfs(A,i,j)
+                found = True
+                break
+    step = 0
+    while self.queue:
+        subQ= []
+        while self.queue:
+            temp = self.queue.pop(0)
+            for k in range(4):
+                i = temp[0] + self.rowVector[k]
+                j = temp[1] + self.colVector[k]
+                if i < 0 or j < 0 or i > len(A)-1 or j > len(A[0])-1 or self.visited[i][j]:
+                    continue
+                if A[i][j] == 1:
+                    return step
+                subQ.append((i,j))
+                self.visited[i][j] = True
+        self.queue = subQ
+        step += 1
+    return len(A)
+
     
-    return self.CalculateDistance()
-
-  def searchLimit(self,A):
-    for row in range(len(A)):
-      for col in range(len(A[0])):
-        if A[row][col] == 1:
-          self.limits(A,row,col)
-          
   
-  def limits(self,A,row,col):
-    directions=[(1,0),(0,1),(-1,0),(0,-1)]
-    for direct in directions:
-      new_row = row+direct[0]
-      new_col = col+direct[1]
-      if new_row < 0 or new_col < 0 or new_row >= len(A) or new_col >= len(A[0]):
-        continue
-      elif A[new_row][new_col] == 0:
-        self.ArrayLimits.append((row,col))
-        #A[row][col]=3
-        break
-        
-    return
-      
-  def CalculateDistance(self):
-    for i in self.ArrayLimits:
-      minX,minY=self.MinEjeYValue(i)
-      self.distances.append(minX)
-      self.distances.append(minY)
-    return self.distances
-
-  def MinEjeYValue(self,element):
-    menorY:int=10
-    menorX:int=10
-    for j in self.ArrayLimits:
-      if element[0] == j[0]:
-        if abs(element[1] - j[1]) < menorY:
-          menorY = abs(element[1] - j[1])
-
-      if element[1] == j[1]:
-        if abs(element[0] - j[0]) < menorX:
-          menorX = abs(element[0] - j[0])
-    return menorX,menorY
-
-
-
-
-if __name__ == '__main__':
-
+if __name__=='__main__':
   mapa = [
     [1,1,1,1,1],
     [1,0,0,0,1],
@@ -63,8 +52,8 @@ if __name__ == '__main__':
     [1,0,0,0,1],
     [1,1,1,1,1],
   ]
-  #response = Bridge().shortestBridge(mapa)
-  #print(response) #1
+  response = Bridge().shortestBridge(mapa)
+  print(response)
 
   mapa = [
     [1,1,0,0,1],
@@ -74,7 +63,4 @@ if __name__ == '__main__':
     [1,0,0,1,1],
   ]
   response = Bridge().shortestBridge(mapa)
-  print(response) #2
-
-  #for i in mapa:
-    #print(i)
+  print(response)
