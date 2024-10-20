@@ -1,22 +1,46 @@
 from langchain_ollama.llms import OllamaLLM
 from langchain_core.prompts import ChatPromptTemplate
-# Inicializar el modelo Gemma2 de Ollama
-#llm = OllamaLLM(model="gemma2:2b")
+from langchain.chains import ConversationChain
+from langchain.memory import ConversationBufferMemory
 
+# Definimos el template del prompt
 template = """
 Eres un asistente útil, tu nombre es DermaBot y hablas solamente español, nada en inglés. 
-Tu rol es guiar al usuario a detectar qué posibles enfermedades dermatológicas tiene y das recomendaciones y sugerencias"
-Mensaje del usuario: {mensaje}
-Respuesta del chatbot:
+Tu rol es guiar al usuario a detectar qué posibles enfermedades dermatológicas tiene y das recomendaciones y sugerencias.
 
-"""
-# Hacer una prueba con un input básico
+Historial de la conversación:
+{history}
 
+Humano: {input}
+DermaBot:"""
+
+# Creamos el prompt
 prompt = ChatPromptTemplate.from_template(template)
-model = OllamaLLM(model="gemma2:2b",max_tokens=100)
 
-chain = prompt | model
+# Inicializamos el modelo
+model = OllamaLLM(model="gemma2:2b", max_tokens=100)
 
-response = chain.invoke({"mensaje": "Hola"})
+# Creamos la memoria
+memory = ConversationBufferMemory(return_messages=True)
 
-print(response)
+# Creamos la cadena de conversación
+conversation = ConversationChain(
+    llm=model,
+    memory=memory,
+    prompt=prompt,
+    verbose=True  # Esto mostrará el proceso de la conversación
+)
+
+# Función para manejar la conversación
+def chat_with_dermabot(user_input):
+    response = conversation.predict(input=user_input)
+    return response
+
+# Ejemplo de uso
+#print(chat_with_dermabot("Hola"))
+#print(chat_with_dermabot("Tengo una mancha roja en el brazo"))
+#print(chat_with_dermabot("¿Qué debo hacer?"))
+
+# Para ver el contenido de la memoria
+print("\nContenido de la memoria:")
+print(memory.chat_memory.messages)
